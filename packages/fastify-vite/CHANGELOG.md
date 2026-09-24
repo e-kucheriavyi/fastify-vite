@@ -1,5 +1,57 @@
 # @fastify/vite
 
+## 10.0.0
+
+### Major Changes
+
+- 03cf160: Upgrade @fastify/static to v10.1.2
+
+  Includes the security fixes released in @fastify/static v10.1.1 and v10.1.2.
+
+  ### Breaking Changes
+
+  - **`setHeaders` signature**: `@fastify/static` v10 passes the Fastify `Reply`
+    object to the `setHeaders` callback in `fastifyStaticOptions` instead of the
+    raw Node.js response.
+  - **Header precedence**: Headers set in `setHeaders` now take precedence over the headers
+    `@fastify/static` sets itself (e.g. `Cache-Control` from `maxAge`).
+
+  ### Migration
+
+  If you pass a `setHeaders` callback via `fastifyStaticOptions`:
+
+  ```js
+  // Before
+  setHeaders(res) {
+    res.setHeader('X-Custom-Header', 'value')
+  }
+
+  // After
+  setHeaders(reply) {
+    reply.header('X-Custom-Header', 'value')
+  }
+  ```
+
+## 9.2.0
+
+### Minor Changes
+
+- 58d7d59: Expose "resolvePkgDir" function in utils so @fastify/react can use it to resolve relative paths in vite's `build.outDir` config.
+
+## 9.1.1
+
+### Patch Changes
+
+- e70066c: Refactor environment discovery to iterate `viteConfig.environments` directly
+
+  Replaces the fragile `findPlugin`/`hasPlugin` config-hook re-invocation pattern with direct iteration of `viteConfig.environments`, which is always available after Vite resolves its config. Also uses `isRunnableDevEnvironment(envConfig).runner` where available to avoid creating duplicate `ModuleRunner` instances for cross-environment imports.
+
+## 9.1.0
+
+### Minor Changes
+
+- bbab7c8: Align the renderer typings with the actual runtime contract and export the shared renderer types so TypeScript renderer packages can build against them instead of redeclaring them. Also widens `reply.html()` to allow string and stream returns and a synchronous `createHtmlFunction`. Type-only.
+
 ## 9.0.2
 
 ### Patch Changes

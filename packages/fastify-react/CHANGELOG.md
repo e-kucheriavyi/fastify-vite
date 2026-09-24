@@ -1,5 +1,35 @@
 # @fastify/react
 
+## 1.2.2
+
+### Patch Changes
+
+- Updated dependencies [03cf160]
+  - @fastify/vite@10.0.0
+
+## 1.2.1
+
+### Patch Changes
+
+- ea0371d: Fixes multiple route parameters not expanding
+
+## 1.2.0
+
+### Minor Changes
+
+- e72805c: Update `@fastify/react` routing to use `resolvePkgDir` with `config.root`. This ensures that relative paths set in the vite config's `build.outDir` are resolved correctly according to the `FastifyViteOptions` configuration.
+
+### Patch Changes
+
+- Updated dependencies [58d7d59]
+  - @fastify/vite@9.2.0
+
+## 1.1.8
+
+### Patch Changes
+
+- 5657db4: Fix React renderer virtual module resolution under Vite 8 and skip preload generation when Vite closes a dev server without a production bundle.
+
 ## 1.1.7
 
 ### Patch Changes

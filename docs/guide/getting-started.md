@@ -25,7 +25,7 @@ These packages are implemented the same way, following the specification found i
 
 ## A quick walkthrough
 
-The vanilla React SPA (Single Page Application) project [available in `examples/`](https://github.com/fastify/fastify-vite/tree/dev/examples/react-vanilla-spa) is a good starting point to demonstrate the basics of @fastify/vite. The only difference from this to running Vite's own development server directly is that it's executed as a middleware for the Fastify server, allowing other code and custom routes to be added. Vite's development server middleware only runs if you enable it, otherwise it will serve the production bundle (result of running `vite build`), whose location is automatically inferred from the Vite configuration file.
+The vanilla React SPA (Single Page Application) project [available in `e2e/`](https://github.com/fastify/fastify-vite/tree/main/e2e/react-vanilla-spa) is a good starting point to demonstrate the basics of @fastify/vite. The only difference from this to running Vite's own development server directly is that it's executed as a middleware for the Fastify server, allowing other code and custom routes to be added. Vite's development server middleware only runs if you enable it, otherwise it will serve the production bundle (result of running `vite build`), whose location is automatically inferred from the Vite configuration file.
 
 This basic SPA setup requires a Vite configuration file, the Fastify server file and the appropriate commands in `package.json` to run the server in **development and production modes**, and to **build** your Vite application.
 
@@ -52,7 +52,7 @@ yarn add vite -D
 
 ### The Fastify server
 
-In `server.js`, notice how starting the development mode is conditioned to the presence of a `--dev` CLI argument passed to the Node.js process — could also be an environment variable. The default value for the `dev` configuration option is actually what you see in this snippet, a CLI argument check for `--dev`. All `server.js` files in the [`examples/`](https://github.com/fastify/fastify-vite/tree/dev/examples) are **using this default behavior**.
+In `server.js`, notice how starting the development mode is conditioned to the presence of a `--dev` CLI argument passed to the Node.js process — could also be an environment variable. The default value for the `dev` configuration option is actually what you see in this snippet, a CLI argument check for `--dev`. All `server.js` files in the [`e2e/`](https://github.com/fastify/fastify-vite/tree/main/e2e) examples are **using this default behavior**.
 
 ::: code-group
 
@@ -127,7 +127,7 @@ export default {
 
 In `package.json`, take note of how the `dev`, `start` and `build` commands are defined, all just using your `server.js` file and Vite.
 
-Then for the client code, cleanly separated in the `client/` directory, you have `index.html` loading `mount.js`, `base.jsx` with a React component and `mount.js` loading it. Notice that Vite requires you to have an `index.html` file as it's [the front-and-central build entry point](https://vitejs.dev/guide/#index-html-and-project-root).
+Then for the client code, cleanly separated in the `client/` directory, you have `index.html` loading `mount.js`, `base.jsx` with a React component and `mount.js` loading it. Notice that Vite requires you to have an `index.html` file as it's [the front-and-central build entry point](https://vite.dev/guide/#index-html-and-project-root).
 
 ::: code-group
 
@@ -192,7 +192,7 @@ In all examples in this documentation, the client application code is kept in a 
 It's important to realize that in `server.js`, the `root` configuration option determines where your `vite.config.js` is located. But in `vite.config.js` itself, the `root` configuration option determines where your `index.html` is located. This is your **project root** in Vite's context.
 :::
 
-Regardless of whether you want to simply deliver a SPA bundle to the browser or perform SSR, projects using **`@fastify/vite`** will always need a minimum of **three files**: the Fastify **server**, an [index.html file](https://vitejs.dev/guide/#index-html-and-project-root) and a [Vite configuration file](https://vitejs.dev/config/).
+Regardless of whether you want to simply deliver a SPA bundle to the browser or perform SSR, projects using **`@fastify/vite`** will always need a minimum of **three files**: the Fastify **server**, an [index.html file](https://vite.dev/guide/#index-html-and-project-root) and a [Vite configuration file](https://vite.dev/config/).
 
 ## Architectural primitives
 

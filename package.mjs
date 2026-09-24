@@ -2,6 +2,7 @@ $.verbose = true
 
 import { join } from 'node:path'
 import { readFileSync, writeFileSync } from 'node:fs'
+import { setTimeout as wait } from 'node:timers/promises'
 
 const root = import.meta.dirname
 
@@ -26,6 +27,44 @@ if (process.argv.includes('--prep-for-release')) {
   await prepForRelease()
 }
 
+if (process.argv.includes('--wait-for-published-packages')) {
+  await waitForPublishedPackages()
+}
+
+async function waitForPublishedPackages() {
+  const publishedPackages = JSON.parse(process.env.PUBLISHED_PACKAGES || '[]')
+  const attempts = 12
+  const delayMs = 10_000
+
+  for (const pkg of publishedPackages) {
+    let found = false
+    const spec = `${pkg.name}@${pkg.version}`
+
+    for (let attempt = 1; attempt <= attempts; attempt++) {
+      try {
+        const { stdout } = await $`pnpm view ${spec} version`
+        if (stdout.trim() === pkg.version) {
+          console.log(`${spec} is available on npm.`)
+          found = true
+          break
+        }
+      } catch {
+        console.log(`${spec} is not available on npm yet; retrying (${attempt}/${attempts}).`)
+      }
+
+      if (attempt < attempts) {
+        await wait(delayMs)
+      }
+    }
+
+    if (!found) {
+      throw new Error(`${spec} did not become available on npm.`)
+    }
+  }
+
+  process.exit()
+}
+
 async function prepForRelease() {
   const starterRoot = join(root, 'starters')
   cd(starterRoot)
@@ -47,7 +86,7 @@ async function prepForRelease() {
     writeFileSync(join(starterRoot, starter, 'package.json'), JSON.stringify(pkgJSON, null, 2))
   }
   cd(root)
-  await $`pnpm i`
+  await $`pnpm install --no-frozen-lockfile`
   await $`pnpm format`
   process.exit()
 }
@@ -67,7 +106,7 @@ async function prepForDev() {
     writeFileSync(join(starterRoot, starter, 'package.json'), JSON.stringify(pkgJSON, null, 2))
   }
   cd(root)
-  await $`pnpm i`
+  await $`pnpm install --no-frozen-lockfile`
   await $`pnpm format`
   process.exit()
 }
